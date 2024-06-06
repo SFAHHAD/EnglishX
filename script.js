@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         question: item.question,
                         userAnswer: `${selectedAnswer}. ${item.options[labels.indexOf(selectedAnswer)].split('. ')[1]}`,
                         correctAnswer: `${correctAnswer}. ${item.options[labels.indexOf(correctAnswer)].split('. ')[1]}`,
-                        explanation: item.explanation
+                        explanation: item.explanation.en // Display the explanation in English
                     });
                 }
             } else {
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     question: item.question,
                     userAnswer: "No answer provided",
                     correctAnswer: `${item.answer}. ${item.options[item.answer.charCodeAt(0) - 97].split('. ')[1]}`,
-                    explanation: item.explanation
+                    explanation: item.explanation.en // Display the explanation in English
                 });
             }
         });
