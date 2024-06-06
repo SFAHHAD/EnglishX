@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let userAnswers = new Array(questions.length).fill(null);
     let wrongAnswers = [];
 
-    // Shuffle questions on initial load
-    let shuffledQuestions = shuffleArray(questions);
+    // Render questions on initial load
+    renderQuestions();
 
     submitBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -14,12 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
         displayResults();
     });
 
-    renderQuestions();
-
     function renderQuestions() {
         form.innerHTML = ''; // Clear any existing content
 
-        shuffledQuestions.forEach((item, index) => {
+        questions.forEach((item, index) => {
             const questionDiv = document.createElement('div');
             questionDiv.classList.add('question');
 
@@ -48,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let score = 0;
         wrongAnswers = [];
 
-        shuffledQuestions.forEach((item, index) => {
+        questions.forEach((item, index) => {
             const selectedOption = form.querySelector(`input[name="q${index + 1}"]:checked`);
             if (selectedOption) {
                 userAnswers[index] = selectedOption.value;
@@ -62,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         question: item.question,
                         userAnswer: `${selectedAnswer}. ${item.options[labels.indexOf(selectedAnswer)].split('. ')[1]}`,
                         correctAnswer: `${correctAnswer}. ${item.options[labels.indexOf(correctAnswer)].split('. ')[1]}`,
-                        explanation: item.explanation.en // Display the explanation in English
+                        explanation: item.explanation
                     });
                 }
             } else {
@@ -70,12 +68,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     question: item.question,
                     userAnswer: "No answer provided",
                     correctAnswer: `${item.answer}. ${item.options[item.answer.charCodeAt(0) - 97].split('. ')[1]}`,
-                    explanation: item.explanation.en // Display the explanation in English
+                    explanation: item.explanation
                 });
             }
         });
 
-        scoreDiv.innerHTML = `Total Score: ${score}/${shuffledQuestions.length}`;
+        scoreDiv.innerHTML = `Total Score: ${score}/${questions.length}`;
     }
 
     function displayResults() {
@@ -84,11 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
         resultDiv.classList.add('results');
 
         const totalScore = userAnswers.reduce((total, answer, index) => {
-            return total + (answer === shuffledQuestions[index].answer ? 1 : 0);
+            return total + (answer === questions[index].answer ? 1 : 0);
         }, 0);
 
         const scoreText = document.createElement('p');
-        scoreText.textContent = `Total Score: ${totalScore}/${shuffledQuestions.length}`;
+        scoreText.textContent = `Total Score: ${totalScore}/${questions.length}`;
         resultDiv.appendChild(scoreText);
 
         const wrongAnswersText = document.createElement('h3');
@@ -112,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             wrongAnswerDiv.appendChild(correctAnswerText);
 
             const explanationText = document.createElement('p');
-            explanationText.textContent = `Explanation: ${item.explanation}`;
+            explanationText.textContent = `Explanation: ${item.explanation.en}`;
             explanationText.style.color = 'green';
             wrongAnswerDiv.appendChild(explanationText);
 
@@ -120,13 +118,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         form.appendChild(resultDiv);
-    }
-
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
     }
 });
